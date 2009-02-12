@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>CGITRC(5)</title><link rel="stylesheet" href="cgit-doc.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /></head><body><div class="article" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id227170"></a>CGITRC(5)</h2></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_name">NAME</a></span></dt><dt><span class="section"><a href="#_synopsis">SYNOPSIS</a></span></dt><dt><span class="section"><a href="#_global_settings">GLOBAL SETTINGS</a></span></dt><dt><span class="section"><a href="#_repository_settings">REPOSITORY SETTINGS</a></span></dt><dt><span class="section"><a href="#_example_cgitrc_file">EXAMPLE CGITRC FILE</a></span></dt><dt><span class="section"><a href="#_bugs">BUGS</a></span></dt><dt><span class="section"><a href="#_author">AUTHOR</a></span></dt></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_name"></a>NAME</h2></div></div></div><p>cgitrc - runtime configuration for cgit</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_synopsis"></a>SYNOPSIS</h2></div></div></div><p>Cgitrc contains all runtime settings for cgit, including the list of git
+repositories, formatted as a line-separated list of NAME=VALUE pairs. Blank
+lines, and lines starting with <span class="emphasis"><em>#</em></span>, are ignored.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_global_settings"></a>GLOBAL SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
+agefile
+</span></dt><dd>
+        Specifies a path, relative to each repository path, which can be used
+        to specify the date and time of the youngest commit in the repository.
+        The first line in the file is used as input to the "parse_date"
+        function in libgit. Recommended timestamp-format is "yyyy-mm-dd
+        hh:mm:ss". Default value: "info/web/last-modified".
+</dd><dt><span class="term">
+cache-root
+</span></dt><dd>
+        Path used to store the cgit cache entries. Default value:
+        "/var/cache/cgit".
+</dd><dt><span class="term">
+cache-dynamic-ttl
+</span></dt><dd>
+        Number which specifies the time-to-live, in minutes, for the cached
+        version of repository pages accessed without a fixed SHA1. Default
+        value: "5".
+</dd><dt><span class="term">
+cache-repo-ttl
+</span></dt><dd>
+        Number which specifies the time-to-live, in minutes, for the cached
+        version of the repository summary page. Default value: "5".
+</dd><dt><span class="term">
+cache-root-ttl
+</span></dt><dd>
+        Number which specifies the time-to-live, in minutes, for the cached
+        version of the repository index page. Default value: "5".
+</dd><dt><span class="term">
+cache-size
+</span></dt><dd>
+        The maximum number of entries in the cgit cache. Default value: "0"
+        (i.e. caching is disabled).
+</dd><dt><span class="term">
+cache-static-ttl
+</span></dt><dd>
+        Number which specifies the time-to-live, in minutes, for the cached
+        version of repository pages accessed with a fixed SHA1. Default value:
+        "5".
+</dd><dt><span class="term">
+clone-prefix
+</span></dt><dd>
+        Space-separated list of common prefixes which, when combined with a
+        repository url, generates valid clone urls for the repository. This
+        setting is only used if <code class="literal">repo.clone-url</code> is unspecified. Default value:
+        none.
+</dd><dt><span class="term">
+css
+</span></dt><dd>
+        Url which specifies the css document to include in all cgit pages.
+        Default value: "/cgit.css".
+</dd><dt><span class="term">
+enable-index-links
+</span></dt><dd>
+        Flag which, when set to "1", will make cgit generate extra links for
+        each repo in the repository index (specifically, to the "summary",
+        "commit" and "tree" pages). Default value: "0".
+</dd><dt><span class="term">
+enable-log-filecount
+</span></dt><dd>
+        Flag which, when set to "1", will make cgit print the number of
+        modified files for each commit on the repository log page. Default
+        value: "0".
+</dd><dt><span class="term">
+enable-log-linecount
+</span></dt><dd>
+        Flag which, when set to "1", will make cgit print the number of added
+        and removed lines for each commit on the repository log page. Default
+        value: "0".
+</dd><dt><span class="term">
+favicon
+</span></dt><dd>
+        Url used as link to a shortcut icon for cgit. If specified, it is
+        suggested to use the value "/favicon.ico" since certain browsers will
+        ignore other values. Default value: none.
+</dd><dt><span class="term">
+footer
+</span></dt><dd>
+        The content of the file specified with this option will be included
+        verbatim at the bottom of all pages (i.e. it replaces the standard
+        "generated by…" message. Default value: none.
+</dd><dt><span class="term">
+header
+</span></dt><dd>
+        The content of the file specified with this option will be included
+        verbatim at the top of all pages. Default value: none.
+</dd><dt><span class="term">
+include
+</span></dt><dd>
+        Name of a configfile to include before the rest of the current config-
+        file is parsed. Default value: none.
+</dd><dt><span class="term">
+index-header
+</span></dt><dd>
+        The content of the file specified with this option will be included
+        verbatim above the repository index. This setting is deprecated, and
+        will not be supported by cgit-1.0 (use root-readme instead). Default
+        value: none.
+</dd><dt><span class="term">
+index-info
+</span></dt><dd>
+        The content of the file specified with this option will be included
+        verbatim below the heading on the repository index page. This setting
+        is deprecated, and will not be supported by cgit-1.0 (use root-desc
+        instead). Default value: none.
+</dd><dt><span class="term">
+local-time
+</span></dt><dd>
+        Flag which, if set to "1", makes cgit print commit and tag times in the
+        servers timezone. Default value: "0".
+</dd><dt><span class="term">
+logo
+</span></dt><dd>
+        Url which specifies the source of an image which will be used as a logo
+        on all cgit pages.
+</dd><dt><span class="term">
+logo-link
+</span></dt><dd>
+        Url loaded when clicking on the cgit logo image. If unspecified the
+        calculated url of the repository index page will be used. Default
+        value: none.
+</dd><dt><span class="term">
+max-commit-count
+</span></dt><dd>
+        Specifies the number of entries to list per page in "log" view. Default
+        value: "50".
+</dd><dt><span class="term">
+max-message-length
+</span></dt><dd>
+        Specifies the maximum number of commit message characters to display in
+        "log" view. Default value: "80".
+</dd><dt><span class="term">
+max-repo-count
+</span></dt><dd>
+        Specifies the number of entries to list per page on the repository
+        index page. Default value: "50".
+</dd><dt><span class="term">
+max-repodesc-length
+</span></dt><dd>
+        Specifies the maximum number of repo description characters to display
+        on the repository index page. Default value: "80".
+</dd><dt><span class="term">
+max-stats
+</span></dt><dd>
+        Set the default maximum statistics period. Valid values are "week",
+        "month", "quarter" and "year". If unspecified, statistics are
+        disabled. Default value: none. See also: "repo.max-stats".
+</dd><dt><span class="term">
+module-link
+</span></dt><dd>
+        Text which will be used as the formatstring for a hyperlink when a
+        submodule is printed in a directory listing. The arguments for the
+        formatstring are the path and SHA1 of the submodule commit. Default
+        value: "./?repo=%s&amp;page=commit&amp;id=%s"
+</dd><dt><span class="term">
+nocache
+</span></dt><dd>
+        If set to the value "1" caching will be disabled. This settings is
+        deprecated, and will not be honored starting with cgit-1.0. Default
+        value: "0".
+</dd><dt><span class="term">
+renamelimit
+</span></dt><dd>
+        Maximum number of files to consider when detecting renames. The value
+         "-1" uses the compiletime value in git (for further info, look at
+          <code class="literal">man git-diff</code>). Default value: "-1".
+</dd><dt><span class="term">
+repo.group
+</span></dt><dd>
+        A value for the current repository group, which all repositories
+        specified after this setting will inherit. Default value: none.
+</dd><dt><span class="term">
+robots
+</span></dt><dd>
+        Text used as content for the "robots" meta-tag. Default value:
+        "index, nofollow".
+</dd><dt><span class="term">
+root-desc
+</span></dt><dd>
+        Text printed below the heading on the repository index page. Default
+        value: "a fast webinterface for the git dscm".
+</dd><dt><span class="term">
+root-readme
+</span></dt><dd>
+        The content of the file specified with this option will be included
+        verbatim below the "about" link on the repository index page. Default
+        value: none.
+</dd><dt><span class="term">
+root-title
+</span></dt><dd>
+        Text printed as heading on the repository index page. Default value:
+        "Git Repository Browser".
+</dd><dt><span class="term">
+snapshots
+</span></dt><dd>
+        Text which specifies the default (and allowed) set of snapshot formats
+        supported by cgit. The value is a space-separated list of zero or more
+        of the following values:
+                "tar"           uncompressed tar-file
+                "tar.gz"        gzip-compressed tar-file
+                "tar.bz2"       bzip-compressed tar-file
+                "zip"           zip-file
+        Default value: none.
+</dd><dt><span class="term">
+summary-branches
+</span></dt><dd>
+        Specifies the number of branches to display in the repository "summary"
+        view. Default value: "10".
+</dd><dt><span class="term">
+summary-log
+</span></dt><dd>
+        Specifies the number of log entries to display in the repository
+        "summary" view. Default value: "10".
+</dd><dt><span class="term">
+summary-tags
+</span></dt><dd>
+        Specifies the number of tags to display in the repository "summary"
+        view. Default value: "10".
+</dd><dt><span class="term">
+virtual-root
+</span></dt><dd>
+        Url which, if specified, will be used as root for all cgit links. It
+        will also cause cgit to generate <span class="emphasis"><em>virtual urls</em></span>, i.e. urls like
+        <span class="emphasis"><em>/cgit/tree/README</em></span> as opposed to <span class="emphasis"><em>?r=cgit&amp;p=tree&amp;path=README</em></span>. Default
+        value: none.
+        NOTE: cgit has recently learned how to use PATH_INFO to achieve the
+        same kind of virtual urls, so this option will probably be deprecated.
+</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repository_settings"></a>REPOSITORY SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
+repo.clone-url
+</span></dt><dd>
+        A list of space-separated urls which can be used to clone this repo.
+        Default value: none.
+</dd><dt><span class="term">
+repo.defbranch
+</span></dt><dd>
+        The name of the default branch for this repository. If no such branch
+        exists in the repository, the first branch name (when sorted) is used
+        as default instead. Default value: "master".
+</dd><dt><span class="term">
+repo.desc
+</span></dt><dd>
+        The value to show as repository description. Default value: none.
+</dd><dt><span class="term">
+repo.enable-log-filecount
+</span></dt><dd>
+        A flag which can be used to disable the global setting
+        `enable-log-filecount'. Default value: none.
+</dd><dt><span class="term">
+repo.enable-log-linecount
+</span></dt><dd>
+        A flag which can be used to disable the global setting
+        `enable-log-linecount'. Default value: none.
+</dd><dt><span class="term">
+repo.max-stats
+</span></dt><dd>
+        Override the default maximum statistics period. Valid values are equal
+        to the values specified for the global "max-stats" setting. Default
+        value: none.
+</dd><dt><span class="term">
+repo.name
+</span></dt><dd>
+        The value to show as repository name. Default value: &lt;repo.url&gt;.
+</dd><dt><span class="term">
+repo.owner
+</span></dt><dd>
+        A value used to identify the owner of the repository. Default value:
+        none.
+</dd><dt><span class="term">
+repo.path
+</span></dt><dd>
+        An absolute path to the repository directory. For non-bare repositories
+        this is the .git-directory. Default value: none.
+</dd><dt><span class="term">
+repo.readme
+</span></dt><dd>
+        A path (relative to &lt;repo.path&gt;) which specifies a file to include
+        verbatim as the "About" page for this repo. Default value: none.
+</dd><dt><span class="term">
+repo.snapshots
+</span></dt><dd>
+        A mask of allowed snapshot-formats for this repo, restricted by the
+        "snapshots" global setting. Default value: &lt;snapshots&gt;.
+</dd><dt><span class="term">
+repo.url
+</span></dt><dd>
+        The relative url used to access the repository. This must be the first
+        setting specified for each repo. Default value: none.
+</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_example_cgitrc_file"></a>EXAMPLE CGITRC FILE</h2></div></div></div><pre class="literallayout"># Enable caching of up to 1000 output entriess
+cache-size=1000
+
+
+# Specify some default clone prefixes
+clone-prefix=git://foobar.com ssh://foobar.com/pub/git http://foobar.com/git
+
+# Specify the css url
+css=/css/cgit.css
+
+
+# Show extra links for each repository on the index page
+enable-index-links=1
+
+
+# Show number of affected files per commit on the log pages
+enable-log-filecount=1
+
+
+# Show number of added/removed lines per commit on the log pages
+enable-log-linecount=1
+
+
+# Add a cgit favicon
+favicon=/favicon.ico
+
+
+# Use a custom logo
+logo=/img/mylogo.png
+
+
+# Enable statistics per week, month and quarter
+max-stats=quarter
+
+
+# Set the title and heading of the repository index page
+root-title=foobar.com git repositories
+
+
+# Set a subheading for the repository index page
+root-desc=tracking the foobar development
+
+
+# Include some more info about foobar.com on the index page
+root-readme=/var/www/htdocs/about.html
+
+
+# Allow download of tar.gz, tar.bz2 and zip-files
+snapshots=tar.gz tar.bz2 zip
+
+
+##
+## List of repositories.
+## PS: Any repositories listed when repo.group is unset will not be
+##     displayed under a group heading
+## PPS: This list could be kept in a different file (e.g. '/etc/cgitrepos')
+##      and included like this:
+##        include=/etc/cgitrepos
+##
+
+
+repo.url=foo
+repo.path=/pub/git/foo.git
+repo.desc=the master foo repository
+repo.owner=fooman@foobar.com
+repo.readme=info/web/about.html
+
+
+repo.url=bar
+repo.path=/pub/git/bar.git
+repo.desc=the bars for your foo
+repo.owner=barman@foobar.com
+repo.readme=info/web/about.html
+
+
+# The next repositories will be displayed under the 'extras' heading
+repo.group=extras
+
+
+repo.url=baz
+repo.path=/pub/git/baz.git
+repo.desc=a set of extensions for bar users
+
+repo.url=wiz
+repo.path=/pub/git/wiz.git
+repo.desc=the wizard of foo
+
+
+# Add some mirrored repositories
+repo.group=mirrors
+
+
+repo.url=git
+repo.path=/pub/git/git.git
+repo.desc=the dscm
+
+
+repo.url=linux
+repo.path=/pub/git/linux.git
+repo.desc=the kernel
+
+# Disable adhoc downloads of this repo
+repo.snapshots=0
+
+# Disable line-counts for this repo
+repo.enable-log-linecount=0
+
+# Restrict the max statistics period for this repo
+repo.max-stats=month</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_bugs"></a>BUGS</h2></div></div></div><p>Comments currently cannot appear on the same line as a setting; the comment
+will be included as part of the value. E.g. this line:</p><pre class="literallayout">robots=index  # allow indexing</pre><p>will generate the following html element:</p><pre class="literallayout">&lt;meta name='robots' content='index  # allow indexing'/&gt;</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_author"></a>AUTHOR</h2></div></div></div><p>Lars Hjemli &lt;hjemli@gmail.com&gt;</p></div></div></body></html>
