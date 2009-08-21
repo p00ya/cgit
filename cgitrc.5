@@ -1,11 +1,11 @@
 .\"     Title: cgitrc
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 08/09/2009
+.\"      Date: 08/21/2009
 .\"    Manual: 
 .\"    Source: 
 .\"
-.TH "CGITRC" "5" "08/09/2009" "" ""
+.TH "CGITRC" "5" "08/21/2009" "" ""
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -14,6 +14,9 @@
 cgitrc \- runtime configuration for cgit
 .SH "SYNOPSIS"
 Cgitrc contains all runtime settings for cgit, including the list of git repositories, formatted as a line\-separated list of NAME=VALUE pairs\&. Blank lines, and lines starting with \fI#\fR, are ignored\&.
+.sp
+.SH "LOCATION"
+The default location of cgitrc, defined at compile time, is /etc/cgitrc\&. At runtime, cgit will consult the environment variable CGIT_CONFIG and, if defined, use its value instead\&.
 .sp
 .SH "GLOBAL SETTINGS"
 .PP
@@ -136,7 +139,7 @@ Flag which, if set to "1", makes cgit print commit and tag times in the servers 
 .PP
 logo
 .RS 4
-Url which specifies the source of an image which will be used as a logo on all cgit pages\&.
+Url which specifies the source of an image which will be used as a logo on all cgit pages\&. Default value: "/cgit\&.png"\&.
 .RE
 .PP
 logo\-link

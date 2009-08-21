@@ -1,7 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>CGITRC(5)</title><link rel="stylesheet" href="cgit-doc.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /></head><body><div class="article" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id234237"></a>CGITRC(5)</h2></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_name">1. NAME</a></span></dt><dt><span class="section"><a href="#_synopsis">2. SYNOPSIS</a></span></dt><dt><span class="section"><a href="#_global_settings">3. GLOBAL SETTINGS</a></span></dt><dt><span class="section"><a href="#_repository_settings">4. REPOSITORY SETTINGS</a></span></dt><dt><span class="section"><a href="#_example_cgitrc_file">5. EXAMPLE CGITRC FILE</a></span></dt><dt><span class="section"><a href="#_bugs">6. BUGS</a></span></dt><dt><span class="section"><a href="#_author">7. AUTHOR</a></span></dt></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_name"></a>1. NAME</h2></div></div></div><p>cgitrc - runtime configuration for cgit</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_synopsis"></a>2. SYNOPSIS</h2></div></div></div><p>Cgitrc contains all runtime settings for cgit, including the list of git
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>CGITRC(5)</title><link rel="stylesheet" href="cgit-doc.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /></head><body><div class="article" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id261692"></a>CGITRC(5)</h2></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_name">1. NAME</a></span></dt><dt><span class="section"><a href="#_synopsis">2. SYNOPSIS</a></span></dt><dt><span class="section"><a href="#_location">3. LOCATION</a></span></dt><dt><span class="section"><a href="#_global_settings">4. GLOBAL SETTINGS</a></span></dt><dt><span class="section"><a href="#_repository_settings">5. REPOSITORY SETTINGS</a></span></dt><dt><span class="section"><a href="#_example_cgitrc_file">6. EXAMPLE CGITRC FILE</a></span></dt><dt><span class="section"><a href="#_bugs">7. BUGS</a></span></dt><dt><span class="section"><a href="#_author">8. AUTHOR</a></span></dt></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_name"></a>1. NAME</h2></div></div></div><p>cgitrc - runtime configuration for cgit</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_synopsis"></a>2. SYNOPSIS</h2></div></div></div><p>Cgitrc contains all runtime settings for cgit, including the list of git
 repositories, formatted as a line-separated list of NAME=VALUE pairs. Blank
-lines, and lines starting with <span class="emphasis"><em>#</em></span>, are ignored.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_global_settings"></a>3. GLOBAL SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
+lines, and lines starting with <span class="emphasis"><em>#</em></span>, are ignored.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_location"></a>3. LOCATION</h2></div></div></div><p>The default location of cgitrc, defined at compile time, is /etc/cgitrc. At
+runtime, cgit will consult the environment variable CGIT_CONFIG and, if
+defined, use its value instead.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_global_settings"></a>4. GLOBAL SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
 about-filter
 </span></dt><dd>
         Specifies a command which will be invoked to format the content of
@@ -142,7 +144,7 @@ local-time
 logo
 </span></dt><dd>
         Url which specifies the source of an image which will be used as a logo
-        on all cgit pages.
+        on all cgit pages. Default value: "/cgit.png".
 </dd><dt><span class="term">
 logo-link
 </span></dt><dd>
@@ -279,7 +281,7 @@ virtual-root
         value: none.
         NOTE: cgit has recently learned how to use PATH_INFO to achieve the
         same kind of virtual urls, so this option will probably be deprecated.
-</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repository_settings"></a>4. REPOSITORY SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
+</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repository_settings"></a>5. REPOSITORY SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
 repo.about-filter
 </span></dt><dd>
         Override the default about-filter. Default value: &lt;about-filter&gt;.
@@ -351,7 +353,7 @@ repo.url
 </span></dt><dd>
         The relative url used to access the repository. This must be the first
         setting specified for each repo. Default value: none.
-</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_example_cgitrc_file"></a>5. EXAMPLE CGITRC FILE</h2></div></div></div><pre class="literallayout"># Enable caching of up to 1000 output entriess
+</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_example_cgitrc_file"></a>6. EXAMPLE CGITRC FILE</h2></div></div></div><pre class="literallayout"># Enable caching of up to 1000 output entriess
 cache-size=1000
 
 
@@ -472,5 +474,5 @@ repo.snapshots=0
 repo.enable-log-linecount=0
 
 # Restrict the max statistics period for this repo
-repo.max-stats=month</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_bugs"></a>6. BUGS</h2></div></div></div><p>Comments currently cannot appear on the same line as a setting; the comment
-will be included as part of the value. E.g. this line:</p><pre class="literallayout">robots=index  # allow indexing</pre><p>will generate the following html element:</p><pre class="literallayout">&lt;meta name='robots' content='index  # allow indexing'/&gt;</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_author"></a>7. AUTHOR</h2></div></div></div><p>Lars Hjemli &lt;<a class="ulink" href="mailto:hjemli@gmail.com" target="_top">hjemli@gmail.com</a>&gt;</p></div></div></body></html>
+repo.max-stats=month</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_bugs"></a>7. BUGS</h2></div></div></div><p>Comments currently cannot appear on the same line as a setting; the comment
+will be included as part of the value. E.g. this line:</p><pre class="literallayout">robots=index  # allow indexing</pre><p>will generate the following html element:</p><pre class="literallayout">&lt;meta name='robots' content='index  # allow indexing'/&gt;</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_author"></a>8. AUTHOR</h2></div></div></div><p>Lars Hjemli &lt;<a class="ulink" href="mailto:hjemli@gmail.com" target="_top">hjemli@gmail.com</a>&gt;</p></div></div></body></html>
