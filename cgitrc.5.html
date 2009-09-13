@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>CGITRC(5)</title><link rel="stylesheet" href="cgit-doc.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /></head><body><div class="article" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id261692"></a>CGITRC(5)</h2></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_name">1. NAME</a></span></dt><dt><span class="section"><a href="#_synopsis">2. SYNOPSIS</a></span></dt><dt><span class="section"><a href="#_location">3. LOCATION</a></span></dt><dt><span class="section"><a href="#_global_settings">4. GLOBAL SETTINGS</a></span></dt><dt><span class="section"><a href="#_repository_settings">5. REPOSITORY SETTINGS</a></span></dt><dt><span class="section"><a href="#_example_cgitrc_file">6. EXAMPLE CGITRC FILE</a></span></dt><dt><span class="section"><a href="#_bugs">7. BUGS</a></span></dt><dt><span class="section"><a href="#_author">8. AUTHOR</a></span></dt></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_name"></a>1. NAME</h2></div></div></div><p>cgitrc - runtime configuration for cgit</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_synopsis"></a>2. SYNOPSIS</h2></div></div></div><p>Cgitrc contains all runtime settings for cgit, including the list of git
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>CGITRC(5)</title><link rel="stylesheet" href="cgit-doc.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.1" /></head><body><div xml:lang="en" class="article" title="CGITRC(5)" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="id218440"></a>CGITRC(5)</h2></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#_name">1. NAME</a></span></dt><dt><span class="section"><a href="#_synopsis">2. SYNOPSIS</a></span></dt><dt><span class="section"><a href="#_location">3. LOCATION</a></span></dt><dt><span class="section"><a href="#_global_settings">4. GLOBAL SETTINGS</a></span></dt><dt><span class="section"><a href="#_repository_settings">5. REPOSITORY SETTINGS</a></span></dt><dt><span class="section"><a href="#_repository_specific_cgitrc_file">6. REPOSITORY-SPECIFIC CGITRC FILE</a></span></dt><dt><span class="section"><a href="#_example_cgitrc_file">7. EXAMPLE CGITRC FILE</a></span></dt><dt><span class="section"><a href="#_bugs">8. BUGS</a></span></dt><dt><span class="section"><a href="#_author">9. AUTHOR</a></span></dt></dl></div><div class="section" title="1.&#xA0;NAME"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_name"></a>1. NAME</h2></div></div></div><p>cgitrc - runtime configuration for cgit</p></div><div class="section" title="2.&#xA0;SYNOPSIS"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_synopsis"></a>2. SYNOPSIS</h2></div></div></div><p>Cgitrc contains all runtime settings for cgit, including the list of git
 repositories, formatted as a line-separated list of NAME=VALUE pairs. Blank
-lines, and lines starting with <span class="emphasis"><em>#</em></span>, are ignored.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_location"></a>3. LOCATION</h2></div></div></div><p>The default location of cgitrc, defined at compile time, is /etc/cgitrc. At
+lines, and lines starting with <span class="emphasis"><em>#</em></span>, are ignored.</p></div><div class="section" title="3.&#xA0;LOCATION"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_location"></a>3. LOCATION</h2></div></div></div><p>The default location of cgitrc, defined at compile time, is /etc/cgitrc. At
 runtime, cgit will consult the environment variable CGIT_CONFIG and, if
-defined, use its value instead.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_global_settings"></a>4. GLOBAL SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
+defined, use its value instead.</p></div><div class="section" title="4.&#xA0;GLOBAL SETTINGS"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_global_settings"></a>4. GLOBAL SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
 about-filter
 </span></dt><dd>
         Specifies a command which will be invoked to format the content of
@@ -41,6 +42,11 @@ cache-root-ttl
         Number which specifies the time-to-live, in minutes, for the cached
         version of the repository index page. Default value: "5".
 </dd><dt><span class="term">
+cache-scanrc-ttl
+</span></dt><dd>
+        Number which specifies the time-to-live, in minutes, for the result
+        of scanning a path for git repositories. Default value: "15".
+</dd><dt><span class="term">
 cache-size
 </span></dt><dd>
         The maximum number of entries in the cgit cache. Default value: "0"
@@ -77,6 +83,11 @@ embedded
         suitable for embedding in other html pages. Default value: none. See
         also: "noheader".
 </dd><dt><span class="term">
+enable-filter-overrides
+</span></dt><dd>
+        Flag which, when set to "1", allows all filter settings to be
+        overridden in repository-specific cgitrc files. Default value: none.
+</dd><dt><span class="term">
 enable-index-links
 </span></dt><dd>
         Flag which, when set to "1", will make cgit generate extra links for
@@ -94,6 +105,11 @@ enable-log-linecount
         Flag which, when set to "1", will make cgit print the number of added
         and removed lines for each commit on the repository log page. Default
         value: "0".
+</dd><dt><span class="term">
+enable-tree-linenumbers
+</span></dt><dd>
+        Flag which, when set to "1", will make cgit generate linenumber links
+        for plaintext blobs printed in the tree view. Default value: "1".
 </dd><dt><span class="term">
 favicon
 </span></dt><dd>
@@ -214,8 +230,8 @@ renamelimit
 </dd><dt><span class="term">
 repo.group
 </span></dt><dd>
-        A value for the current repository group, which all repositories
-        specified after this setting will inherit. Default value: none.
+        Legacy alias for "section". This option is deprecated and will not be
+        supported in cgit-1.0.
 </dd><dt><span class="term">
 robots
 </span></dt><dd>
@@ -238,16 +254,23 @@ root-title
         Text printed as heading on the repository index page. Default value:
         "Git Repository Browser".
 </dd><dt><span class="term">
+scan-path
+</span></dt><dd>
+        A path which will be scanned for repositories. If caching is enabled,
+        the result will be cached as a cgitrc include-file in the cache
+        directory. Default value: none. See also: cache-scanrc-ttl.
+</dd><dt><span class="term">
+section
+</span></dt><dd>
+        The name of the current repository section - all repositories defined
+        after this option will inherit the current section name. Default value:
+        none.
+</dd><dt><span class="term">
 snapshots
 </span></dt><dd>
-        Text which specifies the default (and allowed) set of snapshot formats
-        supported by cgit. The value is a space-separated list of zero or more
-        of the following values:
-                "tar"           uncompressed tar-file
-                "tar.gz"        gzip-compressed tar-file
-                "tar.bz2"       bzip-compressed tar-file
-                "zip"           zip-file
-        Default value: none.
+        Text which specifies the default set of snapshot formats generated by
+        cgit. The value is a space-separated list of zero or more of the
+        values "tar", "tar.gz", "tar.bz2" and "zip". Default value: none.
 </dd><dt><span class="term">
 source-filter
 </span></dt><dd>
@@ -281,10 +304,11 @@ virtual-root
         value: none.
         NOTE: cgit has recently learned how to use PATH_INFO to achieve the
         same kind of virtual urls, so this option will probably be deprecated.
-</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repository_settings"></a>5. REPOSITORY SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
+</dd></dl></div></div><div class="section" title="5.&#xA0;REPOSITORY SETTINGS"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repository_settings"></a>5. REPOSITORY SETTINGS</h2></div></div></div><div class="variablelist"><dl><dt><span class="term">
 repo.about-filter
 </span></dt><dd>
-        Override the default about-filter. Default value: &lt;about-filter&gt;.
+        Override the default about-filter. Default value: none. See also:
+        "enable-filter-overrides".
 </dd><dt><span class="term">
 repo.clone-url
 </span></dt><dd>
@@ -293,7 +317,8 @@ repo.clone-url
 </dd><dt><span class="term">
 repo.commit-filter
 </span></dt><dd>
-        Override the default commit-filter. Default value: &lt;commit-filter&gt;.
+        Override the default commit-filter. Default value: none. See also:
+        "enable-filter-overrides".
 </dd><dt><span class="term">
 repo.defbranch
 </span></dt><dd>
@@ -308,12 +333,12 @@ repo.desc
 repo.enable-log-filecount
 </span></dt><dd>
         A flag which can be used to disable the global setting
-        `enable-log-filecount'. Default value: none.
+        ‘enable-log-filecount’. Default value: none.
 </dd><dt><span class="term">
 repo.enable-log-linecount
 </span></dt><dd>
         A flag which can be used to disable the global setting
-        `enable-log-linecount'. Default value: none.
+        ‘enable-log-linecount’. Default value: none.
 </dd><dt><span class="term">
 repo.max-stats
 </span></dt><dd>
@@ -345,15 +370,27 @@ repo.snapshots
         A mask of allowed snapshot-formats for this repo, restricted by the
         "snapshots" global setting. Default value: &lt;snapshots&gt;.
 </dd><dt><span class="term">
+repo.section
+</span></dt><dd>
+        Override the current section name for this repository. Default value:
+        none.
+</dd><dt><span class="term">
 repo.source-filter
 </span></dt><dd>
-        Override the default source-filter. Default value: &lt;source-filter&gt;.
+        Override the default source-filter. Default value: none. See also:
+        "enable-filter-overrides".
 </dd><dt><span class="term">
 repo.url
 </span></dt><dd>
         The relative url used to access the repository. This must be the first
         setting specified for each repo. Default value: none.
-</dd></dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_example_cgitrc_file"></a>6. EXAMPLE CGITRC FILE</h2></div></div></div><pre class="literallayout"># Enable caching of up to 1000 output entriess
+</dd></dl></div></div><div class="section" title="6.&#xA0;REPOSITORY-SPECIFIC CGITRC FILE"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_repository_specific_cgitrc_file"></a>6. REPOSITORY-SPECIFIC CGITRC FILE</h2></div></div></div><p>When the option "scan-path" is used to auto-discover git repositories, cgit
+will try to parse the file "cgitrc" within any found repository. Such a
+repo-specific config file may contain any of the repo-specific options
+described above, except "repo.url" and "repo.path". Additionally, the "filter"
+options are only acknowledged in repo-specific config files when
+"enable-filter-overrides" is set to "1".</p><p>Note: the "repo." prefix is dropped from the option names in repo-specific
+config files, e.g. "repo.desc" becomes "desc".</p></div><div class="section" title="7.&#xA0;EXAMPLE CGITRC FILE"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_example_cgitrc_file"></a>7. EXAMPLE CGITRC FILE</h2></div></div></div><pre class="literallayout"># Enable caching of up to 1000 output entriess
 cache-size=1000
 
 
@@ -474,5 +511,5 @@ repo.snapshots=0
 repo.enable-log-linecount=0
 
 # Restrict the max statistics period for this repo
-repo.max-stats=month</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_bugs"></a>7. BUGS</h2></div></div></div><p>Comments currently cannot appear on the same line as a setting; the comment
-will be included as part of the value. E.g. this line:</p><pre class="literallayout">robots=index  # allow indexing</pre><p>will generate the following html element:</p><pre class="literallayout">&lt;meta name='robots' content='index  # allow indexing'/&gt;</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_author"></a>8. AUTHOR</h2></div></div></div><p>Lars Hjemli &lt;<a class="ulink" href="mailto:hjemli@gmail.com" target="_top">hjemli@gmail.com</a>&gt;</p></div></div></body></html>
+repo.max-stats=month</pre></div><div class="section" title="8.&#xA0;BUGS"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_bugs"></a>8. BUGS</h2></div></div></div><p>Comments currently cannot appear on the same line as a setting; the comment
+will be included as part of the value. E.g. this line:</p><pre class="literallayout">robots=index  # allow indexing</pre><p>will generate the following html element:</p><pre class="literallayout">&lt;meta name='robots' content='index  # allow indexing'/&gt;</pre></div><div class="section" title="9.&#xA0;AUTHOR"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_author"></a>9. AUTHOR</h2></div></div></div><p>Lars Hjemli &lt;<a class="ulink" href="mailto:hjemli@gmail.com" target="_top">hjemli@gmail.com</a>&gt;</p></div></div></body></html>
