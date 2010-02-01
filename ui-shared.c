@@ -276,7 +276,18 @@ void cgit_tree_link(char *name, char *title, char *class, char *head,
 void cgit_plain_link(char *name, char *title, char *class, char *head,
 		     char *rev, char *path)
 {
-	reporevlink("plain", name, title, class, head, rev, path);
+	if (!rev)
+		rev = head;
+	if (!rev)
+		rev = "HEAD";
+	if (path)
+		path = fmt("%s/%s", rev, path);
+	else
+		path = rev;
+	repolink(title, class, "plain", NULL, path);
+	html("'>");
+	html_txt(name);
+	html("</a>");
 }
 
 void cgit_log_link(char *name, char *title, char *class, char *head,

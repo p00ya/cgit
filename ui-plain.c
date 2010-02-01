@@ -123,30 +123,48 @@ static int basedir_len(const char *path)
 
 void cgit_print_plain(struct cgit_context *ctx)
 {
-	const char *rev = ctx->qry.sha1;
+	const char *rev;
 	unsigned char sha1[20];
 	struct commit *commit;
-	const char *paths[] = {ctx->qry.path, NULL};
+	const char *paths[] = {NULL, NULL};
+	char *slash = NULL;
 
-	if (!rev)
-		rev = ctx->qry.head;
-
-	if (get_sha1(rev, sha1)) {
+	/* Take the first path component as the commit ID. */
+	rev = ctx->qry.path;
+	if (!rev) {
 		not_found();
 		return;
 	}
+	slash = strchr(ctx->qry.path, '/');
+	if (slash)
+		*slash = '\0';
+
+	if (get_sha1(rev, sha1)) {
+		if (slash)
+			*slash = '/';
+		not_found();
+		return;
+	}
+
+	/* Parse out the actual path after the commit ID. */
+	if (slash) {
+		*slash = '/';
+		paths[0] = slash + 1;
+		match_baselen = basedir_len(paths[0]);
+	}
+	else {
+		paths[0] = "";
+		match_baselen = -1;
+	}
+
 	commit = lookup_commit_reference(sha1);
 	if (!commit || parse_commit(commit)) {
 		not_found();
 		return;
 	}
-	if (!paths[0]) {
-		paths[0] = "";
-		match_baselen = -1;
+
+	if (match_baselen < 0)
 		print_dir(commit->tree->object.sha1, "", "");
-	}
-	else
-		match_baselen = basedir_len(paths[0]);
 	read_tree_recursive(commit->tree, "", 0, 0, paths, walk_tree, NULL);
 	if (!match)
 		not_found();
