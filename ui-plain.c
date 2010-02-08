@@ -25,7 +25,7 @@ static void not_found()
 static int ensure_slash()
 {
 	size_t n;
-	const char *path;
+	char *path;
 	if (!ctx.cfg.virtual_root || !ctx.env.script_name
 	    || !ctx.env.path_info)
 		return 1;
@@ -35,14 +35,18 @@ static int ensure_slash()
 	path = fmt("%s%s%s%s/", cgit_httpscheme(), cgit_hosturl(),
 		   ctx.env.script_name,
 		   ctx.env.path_info);
-	htmlf("Status: 301 Moved Permanently\n"
-	      "Location: %s\n"
-	      "Content-Type: text/html; charset=UTF-8\n"
-	      "\n"
-	      "<html><head><title>301 Moved Permanently</title></head>\n"
-	      "<body><h1>404 Not Found</h1>\n"
-	      "<p>The document has moved <a href='%s'>here</a>.\n"
-	      "</body></html>\n", path, path);
+	html("Status: 301 Moved Permanently\n"
+	     "Location: ");
+	html(path);
+	html("\n"
+	     "Content-Type: text/html; charset=UTF-8\n"
+	     "\n"
+	     "<html><head><title>301 Moved Permanently</title></head>\n"
+	     "<body><h1>404 Not Found</h1>\n"
+	     "<p>The document has moved <a href='");
+	html_url_path(path);
+	html("'>here</a>.\n"
+	     "</body></html>\n");
 	return 0;
 }
 
@@ -97,8 +101,11 @@ static int print_dir(const unsigned char *sha1, const char *path,
 		fullpath = "/";
 	ctx.page.etag = sha1_to_hex(sha1);
 	cgit_print_http_headers(&ctx);
-	htmlf("<html><head><title>%s</title></head>\n<body>\n"
-	      " <h2>%s</h2>\n <ul>\n", fullpath, fullpath);
+	html("<html><head><title>");
+	html_txt(fullpath);
+	html("</title></head>\n<body>\n <h2>");
+	html_txt(fullpath);
+	html("</h2>\n <ul>\n");
 	if (path[0] || base[0])
 	      html("  <li><a href=\"../\">../</a></li>\n");
 	match = 2;
@@ -108,10 +115,16 @@ static int print_dir(const unsigned char *sha1, const char *path,
 static void print_dir_entry(const unsigned char *sha1, const char *path,
 			    unsigned mode)
 {
-	const char *sep = "";
+	char *url;
 	if (S_ISDIR(mode))
-		sep = "/";
-	htmlf("  <li><a href=\"%s%s\">%s%s</a></li>\n", path, sep, path, sep);
+		url = fmt("%s/", path);
+	else
+		url = fmt("%s", path);
+	html("  <li><a href='");
+	html_url_path(url);
+	html("'>");
+	html_txt(url);
+	html("</a></li>\n");
 	match = 2;
 }
 
