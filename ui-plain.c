@@ -50,6 +50,64 @@ static int ensure_slash()
 	return 0;
 }
 
+static int do_any_refs_exist(const char *refname, const unsigned char *sha1,
+			     int flags, void *cb_data)
+{
+	return 1;
+}
+
+static int print_reflist(const char *refname, const unsigned char *sha1,
+			 int flags, void *cb_data)
+{
+	html("  <li><a href='");
+	html_url_path(refname);
+	html("/'>");
+	html_txt(refname);
+	html("</a></li>\n");
+	return 0;
+}
+
+static void print_branches()
+{
+	if (!ensure_slash())
+		return;
+
+	cgit_print_http_headers(&ctx);
+	html("<html><head><title>");
+	html_txt(ctx.repo->name);
+	html("</title></head>\n<body>\n <h2>");
+	html_txt(ctx.repo->name);
+	html("</h2>\n");
+
+	html(" <p><a href='HEAD/'>HEAD</a></p>\n");
+
+	if (for_each_branch_ref(do_any_refs_exist, NULL)) {
+		html(" <p>Branches:</p>\n <ul>\n");
+		for_each_branch_ref(print_reflist, NULL);
+		html(" </ul>\n");
+	}
+	else
+		html(" <p>(no branches)</p>\n");
+
+	if (for_each_tag_ref(do_any_refs_exist, NULL)) {
+		html(" <p>Tags:</p>\n <ul>\n");
+		for_each_tag_ref(print_reflist, NULL);
+		html(" </ul>\n");
+	}
+	else
+		html(" <p>(no tags)</p>\n");
+
+	if (ctx.repo->enable_remote_branches) {
+		if (for_each_remote_ref(do_any_refs_exist, NULL)) {
+			html(" <p>Remote Branches:</p>\n <ul>\n");
+			for_each_remote_ref(print_reflist, NULL);
+			html(" </ul>\n");
+		}
+		else
+			html(" <p>(no remote branches)</p>\n");
+	}
+}
+
 static void print_object(const unsigned char *sha1, const char *path)
 {
 	enum object_type type;
@@ -171,8 +229,8 @@ void cgit_print_plain(struct cgit_context *ctx)
 
 	/* Take the first path component as the commit ID. */
 	rev = ctx->qry.path;
-	if (!rev) {
-		not_found();
+	if (!rev || !rev[0]) {
+		print_branches();
 		return;
 	}
 	slash = strchr(ctx->qry.path, '/');
