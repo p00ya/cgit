@@ -62,8 +62,11 @@ static void print_dir(const unsigned char *sha1, const char *path,
 		fullpath = "/";
 	ctx.page.etag = sha1_to_hex(sha1);
 	cgit_print_http_headers(&ctx);
-	htmlf("<html><head><title>%s</title></head>\n<body>\n"
-	      " <h2>%s</h2>\n <ul>\n", fullpath, fullpath);
+	html("<html><head><title>");
+	html_txt(fullpath);
+	html("</title></head>\n<body>\n <h2>");
+	html_txt(fullpath);
+	html("</h2>\n <ul>\n");
 	if (path[0] || base[0])
 	      html("  <li><a href=\"../\">../</a></li>\n");
 	match = 2;
@@ -72,10 +75,16 @@ static void print_dir(const unsigned char *sha1, const char *path,
 static void print_dir_entry(const unsigned char *sha1, const char *path,
 			    unsigned mode)
 {
-	const char *sep = "";
+	char *url;
 	if (S_ISDIR(mode))
-		sep = "/";
-	htmlf("  <li><a href=\"%s%s\">%s%s</a></li>\n", path, sep, path, sep);
+		url = fmt("%s/", path);
+	else
+		url = fmt("%s", path);
+	html("  <li><a href='");
+	html_url_path(url);
+	html("'>");
+	html_txt(url);
+	html("</a></li>\n");
 	match = 2;
 }
 
