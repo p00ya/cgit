@@ -13,6 +13,27 @@
 int match_baselen;
 int match;
 
+__attribute__((format (printf,1,2)))
+static void not_found(const char *format, ...);
+static void not_found(const char *format, ...)
+{
+	html("Status: 404 Not Found\n"
+	     "Content-Type: text/html; charset=UTF-8\n\n"
+	     "<html>\n<head>\n<title>404 Not Found</title>\n</head>\n"
+	     "<body>\n<h1>404 Not Found</h1>\n");
+	if (format) {
+		static char buf[65536];
+		va_list args;
+		va_start(args, format);
+		vsnprintf(buf, sizeof(buf), format, args);
+		va_end(args);
+		html("<p>");
+		html_txt(buf);
+		html("</p>\n");
+	}
+	html("</body>\n</html>\n");
+}
+
 static void print_object(const unsigned char *sha1, const char *path)
 {
 	enum object_type type;
@@ -22,13 +43,13 @@ static void print_object(const unsigned char *sha1, const char *path)
 
 	type = sha1_object_info(sha1, &size);
 	if (type == OBJ_BAD) {
-		html_status(404, "Not found", 0);
+		not_found("Bad object: %s", sha1_to_hex(sha1));
 		return;
 	}
 
 	buf = read_sha1_file(sha1, &type, &size);
 	if (!buf) {
-		html_status(404, "Not found", 0);
+		not_found("Object not found: %s", sha1_to_hex(sha1));
 		return;
 	}
 	ctx.page.mimetype = NULL;
@@ -132,12 +153,12 @@ void cgit_print_plain(struct cgit_context *ctx)
 		rev = ctx->qry.head;
 
 	if (get_sha1(rev, sha1)) {
-		html_status(404, "Not found", 0);
+		not_found("Ref not found: %s", rev);
 		return;
 	}
 	commit = lookup_commit_reference(sha1);
 	if (!commit || parse_commit(commit)) {
-		html_status(404, "Not found", 0);
+		not_found("Invalid commit sha1: %s", sha1_to_hex(sha1));
 		return;
 	}
 	if (!paths[0]) {
@@ -149,7 +170,7 @@ void cgit_print_plain(struct cgit_context *ctx)
 		match_baselen = basedir_len(paths[0]);
 	read_tree_recursive(commit->tree, "", 0, 0, paths, walk_tree, NULL);
 	if (!match)
-		html_status(404, "Not found", 0);
+		not_found("File not found");
 	else if (match == 2)
 		print_dir_tail();
 }
