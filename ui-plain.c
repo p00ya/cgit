@@ -34,15 +34,20 @@ static void not_found(const char *format, ...)
 	html("</body>\n</html>\n");
 }
 
-static int ensure_slash()
+static int ends_with_slash()
 {
 	size_t n;
+	if (!ctx.qry.raw)
+		return -1;
+	n = strlen(ctx.qry.raw);
+	return (ctx.qry.raw[n-1] == '/');
+}
+
+static int ensure_slash()
+{
 	char *path;
-	if (!ctx.cfg.virtual_root || !ctx.env.script_name
-	    || !ctx.env.path_info)
-		return 1;
-	n = strlen(ctx.env.path_info);
-	if (ctx.env.path_info[n-1] == '/')
+	if (!ctx.cfg.virtual_root || !ctx.env.script_name ||
+	    !ctx.env.path_info || ends_with_slash())
 		return 1;
 	path = fmt("%s%s%s%s/", cgit_httpscheme(), cgit_hosturl(),
 		   ctx.env.script_name, ctx.env.path_info);
@@ -68,8 +73,14 @@ static void print_object(const unsigned char *sha1, const char *path)
 	unsigned long size;
 	struct string_list_item *mime;
 
+	if (ends_with_slash() > 0) {
+		not_found("Not a directory: %s", path);
+		return;
+	}
+
 	while ((slash = strchr(path, '/')))
 		path = slash + 1;
+
 	type = sha1_object_info(sha1, &size);
 	if (type == OBJ_BAD) {
 		not_found("Bad object: %s", sha1_to_hex(sha1));

@@ -115,5 +115,7 @@ nonexist 'invalid link: up too high' 'up'
 nonexist 'invalid link: up too high 2' 'up2'
 nonexist 'invalid link: file in up too high' 'up/foo'
 nonexist 'invalid link: link to file in up too high' 'up-file'
+nonexist 'invalid link: slash after file' 'file-a/'
+nonexist 'invalid link: slash after link to file' 'link-a/'
 
 tests_done
