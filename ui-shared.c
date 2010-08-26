@@ -321,6 +321,8 @@ static void reporevlink(const char *page, const char *name, const char *title,
 		html(delim);
 		html("id=");
 		html_url_arg(rev);
+		if (ctx.cfg.nofollow_old_commits)
+			html("' rel='nofollow");
 	}
 	html("'>");
 	html_txt(name);
@@ -363,9 +365,11 @@ void cgit_log_link(const char *name, const char *title, const char *class,
 		   int follow)
 {
 	char *delim;
+	int ishead = 1;
 
 	delim = repolink(title, class, "log", head, path);
 	if (rev && ctx.qry.head && strcmp(rev, ctx.qry.head)) {
+		ishead = 0;
 		html(delim);
 		html("id=");
 		html_url_arg(rev);
@@ -395,6 +399,9 @@ void cgit_log_link(const char *name, const char *title, const char *class,
 		html(delim);
 		html("follow=1");
 	}
+	if (!ishead && ctx.cfg.nofollow_old_commits)
+		html("' rel='nofollow");
+
 	html("'>");
 	html_txt(name);
 	html("</a>");
@@ -404,9 +411,11 @@ void cgit_commit_link(const char *name, const char *title, const char *class,
 		      const char *head, const char *rev, const char *path)
 {
 	char *delim;
+	int ishead = 1;
 
 	delim = repolink(title, class, "commit", head, path);
 	if (rev && ctx.qry.head && strcmp(rev, ctx.qry.head)) {
+		ishead = 0;
 		html(delim);
 		html("id=");
 		html_url_arg(rev);
@@ -432,6 +441,8 @@ void cgit_commit_link(const char *name, const char *title, const char *class,
 		html(delim);
 		html("follow=1");
 	}
+	if (!ishead && ctx.cfg.nofollow_old_commits)
+		html("' rel='nofollow");
 	html("'>");
 	if (name[0] != '\0') {
 		if (strlen(name) > ctx.cfg.max_msg_len && ctx.cfg.max_msg_len >= 15) {
@@ -462,9 +473,11 @@ void cgit_diff_link(const char *name, const char *title, const char *class,
 		    const char *path)
 {
 	char *delim;
+	int ishead = 1;
 
 	delim = repolink(title, class, "diff", head, path);
 	if (new_rev && ctx.qry.head != NULL && strcmp(new_rev, ctx.qry.head)) {
+		ishead = 0;
 		html(delim);
 		html("id=");
 		html_url_arg(new_rev);
@@ -496,6 +509,8 @@ void cgit_diff_link(const char *name, const char *title, const char *class,
 		html(delim);
 		html("follow=1");
 	}
+	if (!ishead && ctx.cfg.nofollow_old_commits)
+		html("' rel='nofollow");
 	html("'>");
 	html_txt(name);
 	html("</a>");

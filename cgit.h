@@ -249,6 +249,7 @@ struct cgit_config {
 	int max_blob_size;
 	int max_stats;
 	int noplainemail;
+	int nofollow_old_commits;
 	int noheader;
 	int renamelimit;
 	int remove_suffix;

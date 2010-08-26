@@ -302,6 +302,11 @@ module-link::
 	formatstring are the path and SHA1 of the submodule commit. Default
 	value: none.
 
+nofollow-old-commits::
+	If set to the value "1", HTML links to historical commits (those
+	requiring an "id" parameter in the link) a will have a rel="nofollow"
+	attribute. Default value: "0".
+
 noplainemail::
 	If set to "1" showing full author email addresses will be disabled.
 	Default value: "0".

@@ -149,6 +149,8 @@ static void config_cb(const char *name, const char *value)
 		ctx.cfg.strict_export = xstrdup(value);
 	else if (!strcmp(name, "virtual-root"))
 		ctx.cfg.virtual_root = ensure_end(value, '/');
+	else if (!strcmp(name, "nofollow-old-commits"))
+		ctx.cfg.nofollow_old_commits = atoi(value);
 	else if (!strcmp(name, "noplainemail"))
 		ctx.cfg.noplainemail = atoi(value);
 	else if (!strcmp(name, "noheader"))
@@ -379,6 +381,7 @@ static void prepare_context(void)
 	ctx.cfg.max_repodesc_len = 80;
 	ctx.cfg.max_blob_size = 0;
 	ctx.cfg.max_stats = 0;
+	ctx.cfg.nofollow_old_commits = 0;
 	ctx.cfg.project_list = NULL;
 	ctx.cfg.renamelimit = -1;
 	ctx.cfg.remove_suffix = 0;
