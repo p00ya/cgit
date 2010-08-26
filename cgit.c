@@ -129,6 +129,8 @@ void config_cb(const char *name, const char *value)
 			ctx.cfg.virtual_root = "";
 	} else if (!strcmp(name, "nocache"))
 		ctx.cfg.nocache = atoi(value);
+	else if (!strcmp(name, "nofollow-old-commits"))
+		ctx.cfg.nofollow_old_commits = atoi(value);
 	else if (!strcmp(name, "noplainemail"))
 		ctx.cfg.noplainemail = atoi(value);
 	else if (!strcmp(name, "noheader"))
@@ -307,6 +309,7 @@ static void prepare_context(struct cgit_context *ctx)
 	ctx->cfg.max_blob_size = 0;
 	ctx->cfg.max_stats = 0;
 	ctx->cfg.module_link = "./?repo=%s&page=commit&id=%s";
+	ctx->cfg.nofollow_old_commits = 0;
 	ctx->cfg.project_list = NULL;
 	ctx->cfg.renamelimit = -1;
 	ctx->cfg.remove_suffix = 0;

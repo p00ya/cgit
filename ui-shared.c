@@ -251,6 +251,8 @@ static void reporevlink(const char *page, const char *name, const char *title,
 		html(delim);
 		html("id=");
 		html_url_arg(rev);
+		if (ctx.cfg.nofollow_old_commits)
+			html("' rel='nofollow");
 	}
 	html("'>");
 	html_txt(name);
@@ -286,9 +288,11 @@ void cgit_log_link(const char *name, const char *title, const char *class,
 		   int ofs, const char *grep, const char *pattern, int showmsg)
 {
 	char *delim;
+	int ishead = 1;
 
 	delim = repolink(title, class, "log", head, path);
 	if (rev && strcmp(rev, ctx.qry.head)) {
+		ishead = 0;
 		html(delim);
 		html("id=");
 		html_url_arg(rev);
@@ -313,6 +317,9 @@ void cgit_log_link(const char *name, const char *title, const char *class,
 		html(delim);
 		html("showmsg=1");
 	}
+	if (!ishead && ctx.cfg.nofollow_old_commits)
+		html("' rel='nofollow");
+
 	html("'>");
 	html_txt(name);
 	html("</a>");
@@ -330,9 +337,11 @@ void cgit_commit_link(char *name, const char *title, const char *class,
 	}
 
 	char *delim;
+	int ishead = 1;
 
 	delim = repolink(title, class, "commit", head, path);
 	if (rev && strcmp(rev, ctx.qry.head)) {
+		ishead = 0;
 		html(delim);
 		html("id=");
 		html_url_arg(rev);
@@ -354,6 +363,9 @@ void cgit_commit_link(char *name, const char *title, const char *class,
 		html("ignorews=1");
 		delim = "&amp;";
 	}
+	if (!ishead && ctx.cfg.nofollow_old_commits)
+		html("' rel='nofollow");
+
 	html("'>");
 	html_txt(name);
 	html("</a>");
@@ -377,9 +389,11 @@ void cgit_diff_link(const char *name, const char *title, const char *class,
 		    const char *path, int toggle_ssdiff)
 {
 	char *delim;
+	int ishead = 1;
 
 	delim = repolink(title, class, "diff", head, path);
 	if (new_rev && ctx.qry.head != NULL && strcmp(new_rev, ctx.qry.head)) {
+		ishead = 0;
 		html(delim);
 		html("id=");
 		html_url_arg(new_rev);
@@ -407,6 +421,9 @@ void cgit_diff_link(const char *name, const char *title, const char *class,
 		html("ignorews=1");
 		delim = "&amp;";
 	}
+	if (!ishead && ctx.cfg.nofollow_old_commits)
+		html("' rel='nofollow");
+
 	html("'>");
 	html_txt(name);
 	html("</a>");
