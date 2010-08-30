@@ -773,26 +773,26 @@ static void cgit_print_path_crumbs(struct cgit_context *ctx, char *path)
 
 static void print_header(struct cgit_context *ctx)
 {
-	html("<table id='header'>\n");
-	html("<tr>\n");
+	html("<div id='header'>\n");
 
 	if (ctx->cfg.logo && ctx->cfg.logo[0] != 0) {
-		html("<td class='logo' rowspan='2'><a href='");
+		html("<div class='logo'><a href='");
 		if (ctx->cfg.logo_link)
 			html_attr(ctx->cfg.logo_link);
 		else
 			html_attr(cgit_rooturl());
 		html("'><img src='");
 		html_attr(ctx->cfg.logo);
-		html("' alt='cgit logo'/></a></td>\n");
+		html("' alt='cgit logo'/></a></div>\n");
 	}
 
-	html("<td class='main'>");
+	html("<div class='main'><h1>");
 	if (ctx->repo) {
 		cgit_index_link("index", NULL, NULL, NULL, 0);
 		html(" : ");
 		cgit_summary_link(ctx->repo->name, ctx->repo->name, NULL, NULL);
-		html("</td><td class='form'>");
+		html("</h1>");
+
 		html("<form method='get' action=''>\n");
 		cgit_add_hidden_formfields(0, 1, ctx->qry.page);
 		html("<select name='h' onchange='this.form.submit();'>\n");
@@ -800,22 +800,26 @@ static void print_header(struct cgit_context *ctx)
 		html("</select> ");
 		html("<input type='submit' name='' value='switch'/>");
 		html("</form>");
-	} else
-		html_txt(ctx->cfg.root_title);
-	html("</td></tr>\n");
-
-	html("<tr><td class='sub'>");
-	if (ctx->repo) {
-		html_txt(ctx->repo->desc);
-		html("</td><td class='sub right'>");
-		html_txt(ctx->repo->owner);
 	} else {
+		html_txt(ctx->cfg.root_title);
+		html("</h1>");
+	}
+	html("</div>\n<div class='sub'>");
+	if (ctx->repo) {
+		html("<h1 class='description'>");
+		html_txt(ctx->repo->desc);
+		html("</h1><div id='owner' class='right'>");
+		html_txt(ctx->repo->owner);
+		html("</div");
+	} else {
+		html("<h1>");
 		if (ctx->cfg.root_desc)
 			html_txt(ctx->cfg.root_desc);
 		else if (ctx->cfg.index_info)
 			html_include(ctx->cfg.index_info);
+		html("</h1>");
 	}
-	html("</td></tr></table>\n");
+	html("</div></div>\n");
 }
 
 void cgit_print_pageheader(struct cgit_context *ctx)
