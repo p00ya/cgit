@@ -10,9 +10,6 @@
 #include "html.h"
 #include "ui-shared.h"
 
-int match_baselen;
-int match;
-
 __attribute__((format (printf,1,2)))
 static void not_found(const char *format, ...);
 static void not_found(const char *format, ...)
@@ -81,10 +78,12 @@ static int ensure_slash()
 static void print_object(const unsigned char *sha1, const char *path)
 {
 	enum object_type type;
-	char *buf, *ext;
+	char *buf, *ext, *slash;
 	unsigned long size;
 	struct string_list_item *mime;
 
+	while ((slash = strchr(path, '/')))
+		path = slash + 1;
 	type = sha1_object_info(sha1, &size);
 	if (type == OBJ_BAD) {
 		not_found("Bad object: %s", sha1_to_hex(sha1));
@@ -114,111 +113,82 @@ static void print_object(const unsigned char *sha1, const char *path)
 	ctx.page.etag = sha1_to_hex(sha1);
 	cgit_print_http_headers(&ctx);
 	html_raw(buf, size);
-	match = 1;
 }
 
-static int print_dir(const unsigned char *sha1, const char *path,
-		      const char *base)
+static void print_dir(const unsigned char *sha1, const char *path)
 {
-	char *fullpath;
-	match = 2;
+	struct tree_desc desc;
+	struct name_entry entry;
+	struct tree *tree;
+
 	if (!ensure_slash())
-		return 0;
-	if (path[0] || base[0])
-		fullpath = fmt("/%s%s/", base, path);
+		return;
+
+	if (path[0])
+		path = fmt("/%s/", path);
 	else
-		fullpath = "/";
+		path = "/";
+
+	tree = lookup_tree(sha1);
+	if (!tree || parse_tree(tree)) {
+		not_found("Invalid tree");
+		return;
+	}
+
 	ctx.page.etag = sha1_to_hex(sha1);
 	cgit_print_http_headers(&ctx);
 	html("<html><head><title>");
-	html_txt(fullpath);
+	html_txt(path);
 	html("</title></head>\n<body>\n <h2>");
-	html_txt(fullpath);
+	html_txt(path);
 	html("</h2>\n <ul>\n");
-	if (path[0] || base[0])
+	if (path[1])
 	      html("  <li><a href=\"../\">../</a></li>\n");
-	return 1;
-}
 
-static void print_dir_entry(const unsigned char *sha1, const char *path,
-			    unsigned mode)
-{
-	char *url;
-	if (S_ISDIR(mode))
-		url = fmt("%s/", path);
-	else
-		url = fmt("%s", path);
-	html("  <li><a href='");
-	html_url_path(url);
-	html("'>");
-	html_txt(url);
-	html("</a></li>\n");
-	match = 2;
-}
-
-static void print_dir_tail(void)
-{
-	html(" </ul>\n</body></html>\n");
-}
-
-static int walk_tree(const unsigned char *sha1, const char *base, int baselen,
-		     const char *pathname, unsigned mode, int stage,
-		     void *cbdata)
-{
-	if (baselen == match_baselen) {
-		if (S_ISREG(mode))
-			print_object(sha1, pathname);
-		else if (S_ISDIR(mode)) {
-			if (print_dir(sha1, pathname, base))
-				return READ_TREE_RECURSIVE;
-		}
+	init_tree_desc(&desc, tree->buffer, tree->size);
+	while (tree_entry(&desc, &entry)) {
+		char *url;
+		if (S_ISDIR(entry.mode))
+			url = fmt("%s/", entry.path);
+		else
+			url = fmt("%s", entry.path);
+		html("  <li><a href='");
+		html_url_path(url);
+		html("'>");
+		html_txt(url);
+		html("</a></li>\n");
 	}
-	else if (baselen > match_baselen)
-		print_dir_entry(sha1, pathname, mode);
-	else if (S_ISDIR(mode))
-		return READ_TREE_RECURSIVE;
 
-	return 0;
-}
-
-static int basedir_len(const char *path)
-{
-	char *p = strrchr(path, '/');
-	if (p)
-		return p - path + 1;
-	return 0;
+	html(" </ul>\n</body></html>\n");
 }
 
 void cgit_print_plain(struct cgit_context *ctx)
 {
 	const char *rev = ctx->qry.sha1;
-	unsigned char sha1[20];
-	struct commit *commit;
-	const char *paths[] = {ctx->qry.path, NULL};
+	unsigned char sha1_rev[20], sha1_object[20];
+	char *pathname = "", *errmsg = NULL;
+	int mode = 0, flags = 0;
 
 	if (!rev)
 		rev = ctx->qry.head;
-
-	if (get_sha1(rev, sha1)) {
+	if (get_sha1(rev, sha1_rev)) {
 		not_found("Ref not found: %s", rev);
 		return;
 	}
-	commit = lookup_commit_reference(sha1);
-	if (!commit || parse_commit(commit)) {
-		not_found("Invalid commit sha1: %s", sha1_to_hex(sha1));
-		return;
-	}
-	if (!paths[0]) {
-		paths[0] = "";
-		match_baselen = -1;
-		if (!print_dir(commit->tree->object.sha1, "", ""))
-			return;
-	}
-	else
-		match_baselen = basedir_len(paths[0]);
-	read_tree_recursive(commit->tree, "", 0, 0, paths, walk_tree, NULL);
-	if (!match)
-		not_found("File not found");
-	else if (match == 2)
-		print_dir_tail();
+	if (ctx->qry.path)
+		pathname = ctx->qry.path;
+	if (ctx->cfg.enable_symlink_traversal)
+		flags |= FOLLOW_SYMLINKS;
+
+	if (cgit_find_object_by_path(sha1_rev, pathname, flags, sha1_object,
+				     &mode, &errmsg))
+		not_found("%s", errmsg);
+	else if (S_ISDIR(mode))
+		print_dir(sha1_object, pathname);
+	else if (S_ISREG(mode))
+		print_object(sha1_object, pathname);
+	else if (mode >= 0)
+		not_found("Invalid mode: %d", mode);
+
+	free(errmsg);
 }

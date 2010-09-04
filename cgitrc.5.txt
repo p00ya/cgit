@@ -126,6 +126,10 @@ enable-subject-links::
 	in commit view. Default value: "0". See also:
 	"repo.enable-subject-links".
 
+enable-symlink-traversal::
+	Flag which, when set to "1", will make cgit follow symbolic links in
+	plain view.  Default value: "1".
+
 enable-tree-linenumbers::
 	Flag which, when set to "1", will make cgit generate linenumber links
 	for plaintext blobs printed in the tree view. Default value: "1".
