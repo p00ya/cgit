@@ -96,8 +96,14 @@ static void print_object(const unsigned char *sha1, const char *path)
 	unsigned long size;
 	struct string_list_item *mime;
 
+	if (ends_with_slash() > 0) {
+		not_found("Not a directory: %s", path);
+		return;
+	}
+
 	while ((slash = strchr(path, '/')))
 		path = slash + 1;
+
 	type = sha1_object_info(sha1, &size);
 	if (type == OBJ_BAD) {
 		not_found("Bad object: %s", sha1_to_hex(sha1));
