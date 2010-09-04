@@ -75,6 +75,20 @@ static int ensure_slash()
 	return 0;
 }
 
+static void print_gitlink(const unsigned char *sha1, const char *path)
+{
+	char *slash;
+	while ((slash = strchr(path, '/')))
+		path = slash + 1;
+	ctx.page.mimetype = "text/plain";
+	ctx.page.filename = fmt("%s", path);
+	ctx.page.size = strlen("gitlink: ") + 40;
+	ctx.page.etag = sha1_to_hex(sha1);
+	cgit_print_http_headers(&ctx);
+	html("gitlink: ");
+	html(ctx.page.etag);
+}
+
 static void print_object(const unsigned char *sha1, const char *path)
 {
 	enum object_type type;
@@ -185,8 +199,10 @@ void cgit_print_plain(struct cgit_context *ctx)
 		not_found("%s", errmsg);
 	else if (S_ISDIR(mode))
 		print_dir(sha1_object, pathname);
-	else if (S_ISREG(mode))
+	else if (S_ISREG(mode) || S_ISLNK(mode))
 		print_object(sha1_object, pathname);
+	else if (S_ISGITLINK(mode))
+		print_gitlink(sha1_object, pathname);
 	else if (mode >= 0)
 		not_found("Invalid mode: %d", mode);
 
