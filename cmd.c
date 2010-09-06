@@ -31,9 +31,19 @@ static void HEAD_fn(struct cgit_context *ctx)
 	cgit_clone_head(ctx);
 }
 
+static void HEAD_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 static void atom_fn(struct cgit_context *ctx)
 {
 	cgit_print_atom(ctx->qry.head, ctx->qry.path, ctx->cfg.max_atom_items);
+}
+
+static void atom_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void about_fn(struct cgit_context *ctx)
@@ -44,9 +54,19 @@ static void about_fn(struct cgit_context *ctx)
 		cgit_print_site_readme();
 }
 
+static void about_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 static void blob_fn(struct cgit_context *ctx)
 {
 	cgit_print_blob(ctx->qry.sha1, ctx->qry.path, ctx->qry.head);
+}
+
+static void blob_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void commit_fn(struct cgit_context *ctx)
@@ -54,9 +74,19 @@ static void commit_fn(struct cgit_context *ctx)
 	cgit_print_commit(ctx->qry.sha1, ctx->qry.path);
 }
 
+static void commit_init(struct cgit_context *ctx)
+{
+	cgit_init_commit(ctx, ctx->qry.sha1);
+}
+
 static void diff_fn(struct cgit_context *ctx)
 {
 	cgit_print_diff(ctx->qry.sha1, ctx->qry.sha2, ctx->qry.path);
+}
+
+static void diff_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void info_fn(struct cgit_context *ctx)
@@ -64,10 +94,20 @@ static void info_fn(struct cgit_context *ctx)
 	cgit_clone_info(ctx);
 }
 
+static void info_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 static void log_fn(struct cgit_context *ctx)
 {
 	cgit_print_log(ctx->qry.sha1, ctx->qry.ofs, ctx->cfg.max_commit_count,
 		       ctx->qry.grep, ctx->qry.search, ctx->qry.path, 1);
+}
+
+static void log_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void ls_cache_fn(struct cgit_context *ctx)
@@ -78,9 +118,19 @@ static void ls_cache_fn(struct cgit_context *ctx)
 	cache_ls(ctx->cfg.cache_root);
 }
 
+static void ls_cache_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 static void objects_fn(struct cgit_context *ctx)
 {
 	cgit_clone_objects(ctx);
+}
+
+static void objects_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void repolist_fn(struct cgit_context *ctx)
@@ -88,9 +138,19 @@ static void repolist_fn(struct cgit_context *ctx)
 	cgit_print_repolist();
 }
 
+static void repolist_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 static void patch_fn(struct cgit_context *ctx)
 {
 	cgit_print_patch(ctx->qry.sha1, ctx->qry.path);
+}
+
+static void patch_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void plain_fn(struct cgit_context *ctx)
@@ -98,9 +158,19 @@ static void plain_fn(struct cgit_context *ctx)
 	cgit_print_plain(ctx);
 }
 
+static void plain_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 static void refs_fn(struct cgit_context *ctx)
 {
 	cgit_print_refs();
+}
+
+static void refs_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void snapshot_fn(struct cgit_context *ctx)
@@ -109,9 +179,19 @@ static void snapshot_fn(struct cgit_context *ctx)
 			    ctx->repo->snapshots, ctx->qry.nohead);
 }
 
+static void snapshot_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 static void stats_fn(struct cgit_context *ctx)
 {
 	cgit_show_stats(ctx);
+}
+
+static void stats_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void summary_fn(struct cgit_context *ctx)
@@ -119,9 +199,19 @@ static void summary_fn(struct cgit_context *ctx)
 	cgit_print_summary();
 }
 
+static void summary_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 static void tag_fn(struct cgit_context *ctx)
 {
 	cgit_print_tag(ctx->qry.sha1);
+}
+
+static void tag_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
 }
 
 static void tree_fn(struct cgit_context *ctx)
@@ -129,8 +219,13 @@ static void tree_fn(struct cgit_context *ctx)
 	cgit_print_tree(ctx->qry.sha1, ctx->qry.path);
 }
 
+static void tree_init(struct cgit_context *ctx)
+{
+	cgit_generic_title(ctx);
+}
+
 #define def_cmd(name, want_repo, want_layout, want_vpath) \
-	{#name, name##_fn, want_repo, want_layout, want_vpath}
+	{#name, name##_fn, name##_init, want_repo, want_layout, want_vpath}
 
 struct cgit_cmd *cgit_get_cmd(struct cgit_context *ctx)
 {

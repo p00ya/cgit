@@ -756,7 +756,7 @@ static void cgit_print_path_crumbs(struct cgit_context *ctx, char *path)
 	char *p = path, *q, *end = path + strlen(path);
 
 	ctx->qry.path = NULL;
-	cgit_self_link("root", NULL, NULL, ctx);
+	cgit_self_link(ctx->repo->name, NULL, NULL, ctx);
 	ctx->qry.path = p = path;
 	while (p < end) {
 		if (!(q = strchr(p, '/')))
@@ -790,7 +790,12 @@ static void print_header(struct cgit_context *ctx)
 	if (ctx->repo) {
 		cgit_index_link("index", NULL, NULL, NULL, 0);
 		html(" : ");
-		cgit_summary_link(ctx->repo->name, ctx->repo->name, NULL, NULL);
+		if (ctx->qry.vpath) {
+			html(" ");
+			cgit_print_path_crumbs(ctx, ctx->qry.vpath);
+		} else
+			cgit_summary_link(ctx->repo->name, ctx->repo->name,
+			                  NULL, NULL);
 		html("</h1>");
 
 		html("<form method='get' action=''>\n");
@@ -884,12 +889,6 @@ void cgit_print_pageheader(struct cgit_context *ctx)
 		html("</form>");
 	}
 	html("</td></tr></table>\n");
-	if (ctx->qry.vpath) {
-		html("<div class='path'>");
-		html("path: ");
-		cgit_print_path_crumbs(ctx, ctx->qry.vpath);
-		html("</div>");
-	}
 	html("<div class='content'>");
 }
 
@@ -927,4 +926,17 @@ void cgit_print_snapshot_links(const char *repo, const char *head,
 		cgit_snapshot_link(filename, NULL, NULL, NULL, NULL, filename);
 		html("<br/>");
 	}
+}
+
+void cgit_generic_title(struct cgit_context *ctx)
+{
+	char *title;
+	if (ctx->qry.page && ctx->qry.vpath)
+		title = fmt("%s/%s %s", ctx->repo->name, ctx->qry.vpath,
+		            ctx->qry.page);
+	else if (ctx->qry.page)
+		title = fmt("%s - %s", ctx->qry.page, ctx->repo->desc);
+	else
+		title = fmt("%s - %s", ctx->repo->name, ctx->repo->desc);
+	ctx->page.title = title;
 }

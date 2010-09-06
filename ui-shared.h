@@ -63,4 +63,5 @@ extern void cgit_print_snapshot_links(const char *repo, const char *head,
 				      const char *hex, int snapshots);
 extern void cgit_add_hidden_formfields(int incl_head, int incl_search,
 				       const char *page);
+extern void cgit_generic_title(struct cgit_context *ctx);
 #endif /* UI_SHARED_H */

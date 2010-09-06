@@ -388,6 +388,7 @@ char *find_default_branch(struct cgit_repo *repo)
 
 static int prepare_repo_cmd(struct cgit_context *ctx)
 {
+	struct cgit_cmd *cmd;
 	char *tmp;
 	unsigned char sha1[20];
 	int nongit = 0;
@@ -406,8 +407,6 @@ static int prepare_repo_cmd(struct cgit_context *ctx)
 		cgit_print_docend();
 		return 1;
 	}
-	ctx->page.title = fmt("%s - %s", ctx->repo->name, ctx->repo->desc);
-
 	if (!ctx->qry.head) {
 		ctx->qry.nohead = 1;
 		ctx->qry.head = find_default_branch(ctx->repo);
@@ -435,6 +434,9 @@ static int prepare_repo_cmd(struct cgit_context *ctx)
 		cgit_print_docend();
 		return 1;
 	}
+	cmd = cgit_get_cmd(ctx);
+	cmd->init(ctx);
+
 	return 0;
 }
 

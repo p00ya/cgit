@@ -12,18 +12,14 @@
 #include "ui-diff.h"
 #include "ui-log.h"
 
-void cgit_print_commit(char *hex, const char *prefix)
-{
-	struct commit *commit, *parent;
-	struct commitinfo *info, *parent_info;
-	struct commit_list *p;
-	struct strbuf notes = STRBUF_INIT;
-	unsigned char sha1[20];
-	char *tmp, *tmp2;
-	int parents = 0;
+static struct commit *commit;
+static struct commitinfo *info;
+static unsigned char sha1[20];
 
+void cgit_init_commit(struct cgit_context *ctx, char *hex)
+{
 	if (!hex)
-		hex = ctx.qry.head;
+		hex = ctx->qry.head;
 
 	if (get_sha1(hex, sha1)) {
 		cgit_print_error(fmt("Bad object id: %s", hex));
@@ -35,6 +31,17 @@ void cgit_print_commit(char *hex, const char *prefix)
 		return;
 	}
 	info = cgit_parse_commit(commit);
+	ctx->page.title = fmt("%s commit: %s", ctx->repo->name, info->subject);
+}
+
+void cgit_print_commit(char *hex, const char *prefix)
+{
+	struct commit *parent;
+	struct commitinfo *parent_info;
+	struct commit_list *p;
+	struct strbuf notes = STRBUF_INIT;
+	char *tmp, *tmp2;
+	int parents = 0;
 
 	format_note(NULL, sha1, &notes, PAGE_ENCODING, 0);
 
