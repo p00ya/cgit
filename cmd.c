@@ -56,7 +56,7 @@ static void about_fn(struct cgit_context *ctx)
 
 static void about_init(struct cgit_context *ctx)
 {
-	cgit_generic_title(ctx);
+	cgit_init_repolist(ctx);
 }
 
 static void blob_fn(struct cgit_context *ctx)

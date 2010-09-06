@@ -473,6 +473,9 @@ static void process_request(void *cbdata)
 
 	if (ctx->repo && prepare_repo_cmd(ctx))
 		return;
+	else if (!cmd->want_repo && !ctx->repo && cmd->want_layout)
+		/* For the root-readme page. */
+		cmd->init(ctx);
 
 	if (cmd->want_layout) {
 		cgit_print_http_headers(ctx);

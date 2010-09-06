@@ -302,3 +302,11 @@ void cgit_print_site_readme()
 	if (ctx.cfg.about_filter)
 		cgit_close_filter(ctx.cfg.about_filter);
 }
+
+void cgit_init_repolist(struct cgit_context *ctx)
+{
+	if (ctx->repo)
+		ctx->page.title = fmt("About %s", ctx->repo->desc);
+	else if (!strcmp(ctx->qry.page, "about"))
+		ctx->page.title = fmt("About %s", ctx->cfg.root_desc);
+}
