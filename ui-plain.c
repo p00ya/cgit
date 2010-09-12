@@ -145,9 +145,9 @@ static void print_dir(const unsigned char *sha1, const char *path)
 		return;
 
 	if (path[0])
-		path = fmt("/%s/", path);
+		path = fmt("%s/%s/", ctx.repo->name, path);
 	else
-		path = "/";
+		path = fmt("%s/", ctx.repo->name);
 
 	tree = lookup_tree(sha1);
 	if (!tree || parse_tree(tree)) {
