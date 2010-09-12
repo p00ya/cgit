@@ -190,6 +190,7 @@ struct cgit_config {
 	int enable_log_linecount;
 	int enable_remote_branches;
 	int enable_subject_links;
+	int enable_symlink_traversal;
 	int enable_tree_linenumbers;
 	int local_time;
 	int max_atom_items;
@@ -310,5 +311,12 @@ extern int cgit_close_filter(struct cgit_filter *filter);
 extern int readfile(const char *path, char **buf, size_t *size);
 
 extern char *expand_macros(const char *txt);
+
+extern int cgit_find_object_by_path(const unsigned char *sha1_root,
+				    const char *path, int flags,
+				    unsigned char *sha1_out,
+				    int *mode, char **errmsg);
+
+#define FOLLOW_SYMLINKS 1
 
 #endif /* CGIT_H */

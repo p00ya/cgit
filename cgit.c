@@ -151,6 +151,8 @@ void config_cb(const char *name, const char *value)
 		ctx.cfg.enable_remote_branches = atoi(value);
 	else if (!strcmp(name, "enable-subject-links"))
 		ctx.cfg.enable_subject_links = atoi(value);
+	else if (!strcmp(name, "enable-symlink-traversal"))
+		ctx.cfg.enable_symlink_traversal = atoi(value);
 	else if (!strcmp(name, "enable-tree-linenumbers"))
 		ctx.cfg.enable_tree_linenumbers = atoi(value);
 	else if (!strcmp(name, "max-stats"))
@@ -300,6 +302,7 @@ static void prepare_context(struct cgit_context *ctx)
 	ctx->cfg.logo = "/cgit.png";
 	ctx->cfg.local_time = 0;
 	ctx->cfg.enable_gitweb_owner = 1;
+	ctx->cfg.enable_symlink_traversal = 1;
 	ctx->cfg.enable_tree_linenumbers = 1;
 	ctx->cfg.max_repo_count = 50;
 	ctx->cfg.max_commit_count = 50;
